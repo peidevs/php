@@ -1,1 +1,0 @@
-Event resources by date
