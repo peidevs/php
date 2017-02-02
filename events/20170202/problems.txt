@@ -1,0 +1,88 @@
+CurrentProblem
+P3: Triangle Meshes
+Open Through Sunday Feb 5.
+We need your help in navigating in hexagonal cut-outs of triangle meshes (see mesh figures below).
+In these meshes, each number represents a room and each room has up to 6 neighbouring rooms.
+Each room in the interior is connected to the 6 rooms around it in the same way that room 1 is
+connected to the rooms 2–7 in either figure. For example, in the figure on the right, room 2 is
+connected to rooms 8, 9, 3, 1, 7, and 19. If we denote North, South, East and West by N, S, E, W
+then each room is connected to those rooms that are W, SW, SE, E, NE, and NW of itself. Note
+that rooms directly N and S are not connected. E.g. 1 is not connected to 17 or 11. Rooms on the
+exterior have fewer neighbouring rooms.
+
+All the structures in this problem are hexagonal cut-outs made up of regular concentric hexagonal
+rings. Two examples are shown below. The figure on the left has a hexagonal ring of numbers
+2–7 around the number 1. The figure on the lower right has three hexagonal rings with the numbers 2–7,
+8–19, and 20–37. Larger structures with more than 3 rings may also be used in this problem up to 10 rings.s
+
+        7---6
+       / \ / \
+      2---1---5
+       \ / \ / 
+        3---4
+
+            35--34--33--32
+            / \ / \ / \ / \
+          36--18---17--16--31
+          / \ / \ / \ / \ / \
+        37--19---7---6---15--30
+        / \ / \ / \ / \ / \ / \
+      20---8---2---1---5---14--29
+        \ / \ / \ / \ / \ / \ /
+        21---9---3---4---13--28
+          \ / \ / \ / \ / \ /
+          22--10---11--12--27
+            \ / \ / \ / \ /
+            23--24--25--26
+
+
+Given a room number, you must find a “fire exit” for the room. A fire exit is the shortest route to
+get from that room to a room on the exterior of the hexagonal structure. For example, a fire exit
+for room 1 in the figure on the right is 1 * 2 * 8 * 20. If there is more than one shortest fire exit,
+you must report the shortest route that goes to the lower number neighbour first, and if there are
+two such routes, then the next number should be the lowest, etc; i.e., the smallest sequence in the
+lexicographic order. For rooms on the outside of a structure the fire exit is just the room number,
+like for room 32 in the sample input and output.
+
+Input
+On any input line, the first value corresponds to the non-negative number of hexagonal rings in
+the structure, excluding the “trivial” ring with just room 1 in it, and the subsequent (zero or more)
+numbers on the input line are the rooms for which we want the fire exits in that structure. For
+example, in the sample input, the first input line corresponds to a structure with 1 ring (the figure
+on the top left) and asks for the fire exit from room 1. The second line correspones to a structure with
+3 rings (the figure on the lower right) and asks for the fire exits from rooms 4, 1, 32, 17 and 10.
+The last line of input will have the number -1.
+
+**The input may be free format but the output should be carefully formatted as shown.
+You may assume that no structure has more than 10 rings around the 1.
+
+Output
+For each room which we want the fire escape route for, there should be one line of output listing the fire escape route (format: room * ... * room)
+
+Sample Input
+1 1 6
+3 4 1 32 17 19
+8 1
+-1
+
+Sample Output
+1 * 2 
+6 
+4 * 11 * 24 
+1 * 2 * 8 * 20 
+32 
+17 * 33 
+19 * 36 
+1 * 2 * 8 * 20 * 38 * 62 * 92 * 128 * 170 
+
+*Note this week's problem was used in the 2009 Science Atlantic Programming Contest - so it might be a bit trickier than previous weeks. Once you spot the pattern however (not so easy to spot) the coded solution for this problem is  short.
+Comments from P2
+in P2 we had to find maximum path from top to the bottom of a 'plinko board' diamond shape of numbers. A potential starting place is to think of a greedy solution - namely take the largest number each step. But this doesn't take into a account routes where the bigger numbers are further down the route only accessible after passing through some small numbers (so a strictly greedy algorithm doesn't work).  A second approach is to try a brute force search for all possible routes (like a depth-first or breadth-first search) - try diagonal left until you can no longer and then try diagonal right - if you hit the bottom then save the path length and back-up trying all possible moves again saving the path length if you hit the bottom. This 'works' but it is slow and much too slow for the bigger diamonds. 
+One possible solution is to realize that the greedy algorithm works for a two row path - namely if there is only two rows then you know from a given vertex which is the next vertex chosen (the largest one), so you can combine these two rows into one single row (below the only important choice is that from 10 we chose 25 to maximize that path):
+  ....               ....
+12 10 40  ---->    27 35 65 
+  15 25 (combine)
+Now we know if we get to this row then these paths are already maximized through to the bottom. If you extrapolate this strategy you could start at the bottom and roll the diamond up one row at a time and once you get to the top you've got the max path.  My solution using this strategy is found on the main page - (warning it's unrefined code and I roll the diamond down from top to bottom which makes it a bit tougher to read but it's the same idea).
+Hints and Tips:
+A) Remember that you’ll read everything from Standard input (that’s System.in in Java) and write everything to standard output (that’s System.out in java). Thus your program will run as java MyProgram < input1.txt if you are running your program with input1.txt as the input from the command line. But you will just read everything in your program from System.in (just like you would for  keyboard input - no specific fileio).
+B) While you've been given a few sample input files - keep in mind there may be other input files used to test your solutions.
